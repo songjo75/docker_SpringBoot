@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: springboot-mysql
+    restart: always
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1212
+      MYSQL_DATABASE: boot
+      MYSQL_USER: boot
+      MYSQL_PASSWORD: 1212
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./boot.sql:/docker-entrypoint-initdb.d/init.sql  # <-- 이 줄 추가
+
+  app:
+    build: .
+    container_name: springboot-app
+    restart: always
+    ports:
+      - "8888:8876"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/boot
+      SPRING_DATASOURCE_USERNAME: boot
+      SPRING_DATASOURCE_PASSWORD: 1212
+    networks:
+      - springboot-network
+
+volumes:
+  mysql_data:
+
+networks:
+  springboot-network:

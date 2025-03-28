@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{include/frag :: commonHead('상품추가')}"></head>
+<body class="bg-light">
+<!-- 헤더 -->
+<div th:replace="~{include/frag :: headerFragment}"></div>
+
+
+<div class="container mt-5">
+    <h2 class="icon-text"><i class="material-symbols-outlined">shopping_cart</i> 상품 정보</h2>
+
+    <form th:action="@{/products/save}" th:object="${product}" method="post" class="card p-4 shadow-lg">
+        <input type="hidden" th:field="*{productId}">
+
+        <div class="mb-3">
+            <label class="form-label icon-text">
+                <i class="material-symbols-outlined">inventory_2</i> 상품명
+            </label>
+            <input type="text" th:field="*{name}" id="name" class="form-control" required placeholder="상품명을 입력하세요">
+            <div class="text-danger" id="nameError"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label icon-text">
+                <i class="material-symbols-outlined">info</i> 설명
+            </label>
+            <textarea th:field="*{description}" id="description" class="form-control" rows="3" placeholder="상품 설명을 입력하세요"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label icon-text">
+                ₩ 가격
+            </label>
+            <div class="input-group">
+                <input type="text" th:field="*{price}"
+                       th:value="${#numbers.formatInteger(product.price, 3, 'COMMA')}"
+                       class="form-control text-start" required placeholder="가격을 입력하세요"
+                       onfocus="this.select()"  oninput="formatCurrency(this)">
+            </div>
+            <div class="text-danger" id="priceError"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label icon-text">
+                <i class="material-symbols-outlined">inventory</i> 재고
+            </label>
+            <input type="number" th:field="*{stock}" id="stock" class="form-control" required placeholder="재고 수량을 입력하세요">
+            <div class="text-danger" id="stockError"></div>
+        </div>
+
+        <div class="text-center d-flex gap-2 justify-content-center">
+            <button type="submit" class="btn btn-success icon-text"><span class="material-symbols-outlined">check</span> 저장</button>
+            <a href="/products" class="btn btn-secondary icon-text d-inline-flex align-items-center"><span class="material-symbols-outlined">arrow_back</span> 목록으로</a>
+        </div>
+    </form>
+</div>
+
+<!-- 푸터 -->
+<div th:replace="~{include/frag :: footerFragment}"></div>
+
+<!-- JavaScript: 유효성 검사 & 가격 자동 포맷 -->
+<script>
+    function validateForm() {
+        let isValid = true;
+
+        const name = document.getElementById("name").value.trim();
+        const price = document.getElementById("price").value.replace(/,/g, "").trim(); // 숫자만 검증
+        const stock = document.getElementById("stock").value.trim();
+
+        document.getElementById("nameError").textContent = "";
+        document.getElementById("priceError").textContent = "";
+        document.getElementById("stockError").textContent = "";
+
+        if (name === "") {
+            document.getElementById("nameError").textContent = "상품명을 입력하세요.";
+            isValid = false;
+        }
+
+        if (price === "" || parseInt(price) <= 0) {
+            document.getElementById("priceError").textContent = "올바른 가격을 입력하세요.";
+            isValid = false;
+        }
+
+        if (stock < 0) {
+            document.getElementById("stockError").textContent = "재고 수량은 0 이상이어야 합니다.";
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function formatCurrency(input) {
+        let value = input.value.replace(/[^0-9]/g, '');
+        if (value) {
+            value = new Intl.NumberFormat('ko-KR').format(value);
+        }
+        input.value = value;
+    }
+</script>
+
+</body>
+</html>

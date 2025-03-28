@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{include/frag :: commonHead('상품리스트')}"></head>
+<body class="bg-light">
+<!-- 헤더 -->
+<div th:replace="~{include/frag :: headerFragment}"></div>
+
+<div class="container mt-5">
+    <h4 class="icon-text mb-4">
+        <i class="material-symbols-outlined">shopping_cart</i> 상품 정보
+    </h4>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>상품명</th>
+            <th>설명</th>
+            <th>가격</th>
+            <th>재고</th>
+            <th>액션</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.description}"></td>
+            <td th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')}"></td>
+            <td th:text="${product.stock}"></td>
+            <td class="d-flex gap-2">
+                <a th:href="@{/products/edit/{id}(id=${product.productId})}" class="btn-icon btn-edit">
+                    <i class="material-symbols-outlined">edit</i>
+                </a>
+                <a th:href="@{/products/delete/{id}(id=${product.productId})}" class="btn-icon btn-del">
+                    <i class="material-symbols-outlined">delete</i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/products/form" class="btn btn-primary mb-3 d-flex align-items-center icon-text gap-2 btn-auto">
+        <i class="material-symbols-outlined">add</i> 새 상품 추가
+    </a>
+</div>
+
+<!-- 푸터 -->
+<div th:replace="~{include/frag :: footerFragment}"></div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{include/frag :: commonHead('사용자 리스트')}"></head>
+<body class="bg-light">
+<!-- 헤더 -->
+<div th:replace="~{include/frag :: headerFragment}"></div>
+
+<div class="container mt-5">
+    <h4 class="d-flex align-items-center gap-2 mb-4">
+        <span class="material-symbols-outlined">group</span> 사용자 목록
+    </h4>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th><th>이름</th><th>이메일</th><th>전화번호</th><th>주소</th><th>액션</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.userId}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:if="${#strings.length(user.phone) == 11}" th:text="${#strings.substring(user.phone, 0, 3) + '-' + #strings.substring(user.phone, 3, 7) + '-' + #strings.substring(user.phone, 7)}"></td>
+            <td th:if="${#strings.length(user.phone) == 10}" th:text="${#strings.substring(user.phone, 0, 3) + '-' + #strings.substring(user.phone, 3, 6) + '-' + #strings.substring(user.phone, 6)}"></td>
+
+            <td th:text="${user.address}"></td>
+            <td class="d-flex gap-2">
+                <a th:href="@{/users/form(id=${user.userId})}" class="btn btn-sm btn-warning d-flex align-items-center gap-1">
+                    <span class="material-symbols-outlined">edit</span> 수정
+                </a>
+                <a th:href="@{/users/delete(id=${user.userId})}" class="btn btn-sm btn-danger d-flex align-items-center gap-1"
+                   onclick="return confirm('정말 삭제하시겠습니까?');">
+                    <span class="material-symbols-outlined">delete</span> 삭제
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/users/form" class="btn btn-primary mb-3 d-flex align-items-center icon-text gap-2 btn-auto">
+        <span class="material-symbols-outlined">person_add</span> 새 사용자 추가
+    </a>
+</div>
+<!-- 푸터 -->
+<div th:replace="~{include/frag :: footerFragment}"></div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{include/frag :: commonHead('회원 탈퇴')}"></head>
+<body>
+<div th:replace="~{include/frag :: headerFragment}"></div>
+
+<div class="container mt-5 d-flex">
+  <div th:replace="~{include/frag :: myProfileSidebar('edit')}"></div>
+  <div class="flex-grow-1 card p-4 shadow-lg">
+    <h4 class="mb-4"><span class="material-symbols-outlined">edit</span> 회원정보 수정</h4>
+    <div th:if="${!confirmed}">
+      <form th:action="@{/users/my/edit/confirm-password}" method="post">
+        <div class="mb-3 position-relative input-icon">
+          <span class="material-symbols-outlined input-icon-symbol">lock</span>
+          <input type="password" name="password" class="form-control" placeholder="비밀번호" required>
+        </div>
+        <button type="submit" class="btn btn-primary">비밀번호 확인</button>
+        <div class="text-danger mt-2" th:if="${error}" th:text="${error}"></div>
+      </form>
+    </div>
+    <div th:if="${confirmed}">
+      <form th:action="@{/users/my/edit/save}" method="post">
+        <div class="mb-3 position-relative input-icon">
+          <span class="material-symbols-outlined input-icon-symbol">person</span>
+          <input type="text" th:field="*{user.username}" class="form-control" placeholder="이름" required>
+        </div>
+        <div class="mb-3 position-relative input-icon">
+          <span class="material-symbols-outlined input-icon-symbol">call</span>
+          <input type="text" th:field="*{user.phone}" class="form-control" placeholder="전화번호" required>
+        </div>
+        <div class="mb-3 position-relative input-icon">
+          <span class="material-symbols-outlined input-icon-symbol">home</span>
+          <input type="text" th:field="*{user.address}" class="form-control" placeholder="주소">
+        </div>
+        <button type="submit" class="btn btn-success">정보 수정</button>
+        <div class="text-success mt-2" th:if="${success}" th:text="${success}"></div>
+      </form>
+    </div>
+  </div>
+</div>
+<div th:replace="~{include/frag :: footerFragment}"></div>
+
+</body>
+</html>

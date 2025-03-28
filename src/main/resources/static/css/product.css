@@ -1,0 +1,96 @@
+@charset "utf-8";
+
+.icon-text {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* 아이콘과 텍스트 사이 간격 */
+}
+
+.icon-text i {
+    font-size: 1.2em; /* 아이콘 크기 조정 */
+    vertical-align: middle; /* 아이콘 정렬 */
+}
+
+/* 삭제 버튼 아이콘 스타일 */
+.btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px; /* 버튼 내부 여백 조정 */
+}
+
+.btn-del{
+    color:crimson;
+}
+
+.btn-icon i {
+    font-size: 1.5em; /* 아이콘 크기 확대 */
+}
+
+/* input 아이콘*/
+.input-icon {
+    position: relative;
+    margin-bottom: 1.5rem; /* 입력창과 에러 메시지 공간 확보 */
+}
+
+.input-icon-symbol {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: gray;
+    font-size: 18px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+}
+
+.form-control {
+    height: 40px; /* 입력창 높이 고정 */
+    line-height: 1.5;
+    padding-left: 40px; /* 아이콘 공간 확보 */
+}
+
+.errMsg {
+    position: absolute;
+    bottom: -15px; /* 입력창 아래 공간 확보 */
+    left: 0;
+    font-size: 0.7rem;
+}
+
+.loginErr{
+    font-size: 13px;
+}
+
+/* 아이디 비번 찾기 */
+.login-links {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.login-links span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.login-links a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+.login-links a:hover {
+    text-decoration: underline;
+}
+
+.login-links i.material-symbols-outlined {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1; /* 아이콘과 텍스트 줄맞춤 */
+}

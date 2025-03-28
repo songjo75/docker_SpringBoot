@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:http="http://www.w3.org/1999/xhtml">
+<head th:replace="~{include/frag :: commonHead('사용자정보 입력/수정')}">
+
+</head>
+<body class="bg-light">
+<div th:replace="~{include/frag :: headerFragment}"></div>
+
+<!-- 컨텐츠 영역 -->
+<div class="container mt-5" style="max-width: 600px; margin: auto;">
+
+    <form th:action="@{/users/save}" th:object="${user}" method="post" class="card p-5 shadow-lg" onsubmit="return validateForm()">
+        <h4 class="mb-4"><span class="material-symbols-outlined">person</span> 사용자 정보</h4>
+        <input type="hidden" th:field="*{userId}">
+
+        <div class="mb-3 position-relative input-icon">
+            <span class="material-symbols-outlined input-icon-symbol">person</span>
+            <input type="text" th:field="*{username}" id="username" class="form-control ps-5" required placeholder="이름"/>
+            <div class="text-danger" id="usernameError"></div>
+        </div>
+
+        <div class="mb-3 position-relative input-icon">
+            <span class="material-symbols-outlined input-icon-symbol">lock</span>
+            <input type="password" th:field="*{password}" id="password" class="form-control ps-5" required placeholder="비밀번호"/>
+            <div class="text-danger" id="passwordError"></div>
+        </div>
+
+        <div class="mb-3 position-relative input-icon">
+            <span class="material-symbols-outlined input-icon-symbol">lock</span>
+            <input type="password" id="confirmPassword" class="form-control ps-5" required placeholder="비밀번호 확인"/>
+            <div class="text-danger" id="confirmPasswordError"></div>
+        </div>
+
+        <div class="mb-3 position-relative input-icon">
+            <span class="material-symbols-outlined input-icon-symbol">email</span>
+            <!-- onblur 이벤트 : 포커스를 잃었을 때 발생하는 이벤트 -->
+            <input type="email" th:field="*{email}" id="email" class="form-control ps-5" required placeholder="이메일" onblur="checkEmail()"/>
+            <div class="text-danger errMsg" id="emailError"></div>
+        </div>
+
+        <div class="mb-3 position-relative input-icon">
+            <span class="material-symbols-outlined input-icon-symbol">call</span>
+            <div class="input-group gap-2">
+                <select class="form-select" id="phonePrefix" required>
+                    <option value="010" th:selected="${user != null and #strings.substring(user.phone,0,3) == '010'}" selected>010</option>
+                    <option value="011" th:selected="${user != null and #strings.substring(user.phone,0,3) == '011'}">011</option>
+                    <option value="016" th:selected="${user != null and #strings.substring(user.phone,0,3) == '016'}">016</option>
+                    <option value="017" th:selected="${user != null and #strings.substring(user.phone,0,3) == '017'}">017</option>
+                    <option value="018" th:selected="${user != null and #strings.substring(user.phone,0,3) == '018'}">018</option>
+                    <option value="019" th:selected="${user != null and #strings.substring(user.phone,0,3) == '019'}">019</option>
+                </select>
+<!--                {3,4}: 입력할 수 있는 숫자의 길이가 3자리 또는 4자리임을 의미.-->
+                <input type="text" id="phoneMid" class="form-control" pattern="[0-9]{3,4}" required placeholder="1234"
+                       th:value="${user != null and user.phone != null ? (#strings.length(user.phone) == 10 ? #strings.substring(user.phone,3,6) : #strings.substring(user.phone,3,7)) : ''}">
+                <input type="text" id="phoneEnd" class="form-control" pattern="[0-9]{4}" required placeholder="5678"
+                       th:value="${user != null and user.phone != null ? (#strings.length(user.phone) == 10 ? #strings.substring(user.phone,6) : #strings.substring(user.phone,7)) : ''}">
+                <input type="hidden" id="phone" th:field="*{phone}">
+            </div>
+            <div class="text-danger" id="phoneError"></div>
+        </div>
+
+        <div class="mb-3 position-relative input-icon">
+            <span class="material-symbols-outlined input-icon-symbol">home</span>
+            <input type="text" th:field="*{address}" id="address" class="form-control ps-5" placeholder="주소"/>
+        </div>
+
+        <div class="text-center d-flex gap-2 justify-content-center">
+            <button type="submit" class="btn btn-success icon-text"><span class="material-symbols-outlined">check</span> 저장</button>
+            <a href="/users" class="btn btn-secondary icon-text d-inline-flex align-items-center"><span class="material-symbols-outlined">arrow_back</span> 목록으로</a>
+        </div>
+    </form>
+</div>
+
+<div th:replace="~{include/frag :: footerFragment}"></div>
+
+<script>
+    // DOMContentLoaded 이벤트는 HTML 문서가 완전히 로드되고 DOM 트리가 완성되었을 때 실행되는 이벤트
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     console.log('DOM이 준비됨!');
+    // }
+
+    // 위의 코드는 jQuery의 아래의 코드와 같다.
+    // $(document).ready(function() {
+    //     console.log('DOM이 준비됨!');
+    // });
+    document.addEventListener('DOMContentLoaded', function () {
+        const phoneInput = document.getElementById('phone');
+        const phonePrefix = document.getElementById('phonePrefix');
+        const phoneMid = document.getElementById('phoneMid');
+        const phoneEnd = document.getElementById('phoneEnd');
+
+        function updatePhone() {
+            const mid = phoneMid.value.trim();
+            const end = phoneEnd.value.trim();
+            const phoneRegex = /^[0-9]+$/; // 정규표현식 추가
+
+            if (phoneRegex.test(mid) && phoneRegex.test(end) && (mid.length === 3 || mid.length === 4) && end.length === 4) {
+                phoneInput.value = `${phonePrefix.value}${mid}${end}`;
+            } else {
+                phoneInput.value = '';
+            }
+        }
+
+        phonePrefix.addEventListener('change', updatePhone);
+        phoneMid.addEventListener('input', updatePhone);
+        phoneEnd.addEventListener('input', updatePhone);
+
+        updatePhone(); // 페이지 로드 시 초기화
+
+        function checkPhone() {
+            const phone = phoneInput.value;
+            if (phone) {
+                // 비동기 통신(AJAX)
+                axios.get(`/users/check-phone`, { params: { phone } })
+                    .then(response => {
+                        // {data: true, status: 200, statusText: '', headers: r, config: {…}, …}
+                        console.log(response);
+                        const phoneError = document.getElementById("phoneError");
+                        if (response.data) {
+                            phoneError.textContent = "이미 사용 중인 전화번호입니다.";
+                        } else {
+                            phoneError.textContent = "사용 가능한 전화번호입니다.";
+                        }
+                    })
+                    .catch(error => console.error('전화번호 중복 확인 오류:', error));
+            }
+        }
+
+        phoneEnd.addEventListener('blur', checkPhone);
+    });
+
+    function validateForm() {
+        let isValid = true;
+
+        // // 필드 값 가져오기
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+        // 에러 메시지 초기화
+        document.getElementById("usernameError").textContent = "";
+        document.getElementById("passwordError").textContent = "";
+        document.getElementById("confirmPasswordError").textContent = "";
+        document.getElementById("emailError").textContent = "";
+        document.getElementById("phoneError").textContent = "";
+
+        // 이름 검사
+        if (username === "") {
+            document.getElementById("usernameError").textContent = "이름을 입력하세요.";
+            isValid = false;
+        }
+
+        // 비밀번호 검사
+        if (password.length < 6) {
+            document.getElementById("passwordError").textContent = "비밀번호는 6자 이상이어야 합니다.";
+            isValid = false;
+        }
+
+        // 비밀번호 확인 검사
+        if (password !== confirmPassword) {
+            document.getElementById("confirmPasswordError").textContent = "비밀번호가 일치하지 않습니다.";
+            isValid = false;
+        }
+
+        // 전화번호 유효성 검사 (숫자만 입력 가능)
+        const phone = document.getElementById('phone').value.trim();
+        if (phone === "" || !/^[0-9]+$/.test(phone)) {
+            document.getElementById("phoneError").textContent = "유효한 전화번호를 입력하세요.";
+            isValid = false;
+        }
+        return isValid;
+    }
+
+    // 이메일 중복체크
+    function checkEmail() {
+        const email = document.getElementById('email').value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 이메일 유효성 검사
+
+        const errorDiv = document.getElementById('emailError');
+        errorDiv.textContent = ""; // 에러 초기화
+
+        if (!emailRegex.test(email)) {
+            errorDiv.textContent = '올바른 이메일 형식을 입력하세요.';
+            return;
+        }
+
+        if (email) {
+            axios.get(`/users/check-email`, { params: { email } })
+                .then(response => {
+                    const errorDiv = document.getElementById('emailError');
+                    if (response.data) {
+                        errorDiv.textContent = '이미 사용 중인 이메일입니다.';
+                    } else {
+                        errorDiv.textContent = '사용 가능한 이메일입니다.';
+                    }
+                })
+                .catch(error => {
+                    console.error('이메일 중복 확인 오류:', error);
+                });
+        }
+    }
+</script>
+
+</body>
+</html>

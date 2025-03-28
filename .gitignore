@@ -1,0 +1,54 @@
+# 전체 build 디렉토리 무시
+/build/
+
+# 단, JAR 파일은 포함 (상위부터 예외 풀기 - 순서 중요!)
+!build/
+!build/libs/
+!build/libs/*.jar
+
+# Gradle 관련
+.gradle/
+
+# Gradle build 내부 중복 제거 목적 (명시적)
+build/classes/
+build/tmp/
+build/reports/
+build/resources/
+build/test-results/
+build/distributions/
+build/dependency-cache/
+build/generated/
+
+# Gradle Wrapper 예외
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE: STS / Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# IntelliJ
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VSCode
+.vscode/

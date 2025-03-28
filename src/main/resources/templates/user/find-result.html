@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{include/frag :: commonHead('찾기 결과')}"></head>
+<body>
+<div th:replace="~{include/frag :: headerFragment}"></div>
+
+<div class="container mt-5" style="max-width: 500px; margin: auto;">
+    <div class="card p-4 shadow-lg text-center">
+        <h4 class="mb-4"><span class="material-symbols-outlined">info</span> 결과</h4>
+        <p th:if="${foundEmail != null}" class="text-success">이메일: <strong>[[${foundEmail}]]</strong></p>
+        <p th:if="${passwordReset != null}" class="text-success">[[${passwordReset}]]</p>
+        <p th:if="${foundEmail == null and passwordReset == null}" class="text-danger">결과를 찾을 수 없습니다.</p>
+
+        <a href="/users/login" class="btn btn-primary mt-3 d-flex align-items-center justify-content-center gap-2">
+            <span class="material-symbols-outlined">login</span> 로그인 페이지로 이동
+        </a>
+    </div>
+</div>
+
+<div th:replace="~{include/frag :: footerFragment}"></div>
+</body>
+</html>
